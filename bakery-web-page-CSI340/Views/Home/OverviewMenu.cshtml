@@ -1,0 +1,85 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "OverviewMenu";
+
+    string[] TableHeaders = new string[]
+            {
+      "Menu"
+    };
+}
+<div class= "text-center" >
+ <h1 class= "display-4" > Please Browse our menu selection for healthy, nutritous, but most importantly NOMNOM delicacies</h1>
+
+    <h1>This is our Main Menu</h1>
+    @*<h2>Healthy</h2>
+    <h3>Nutrient filled</h3>
+    <p>Submenu <a href="/Home/SubMenu">here!</a></p>
+    <h4>Delicious</h4>
+    <p>Submenu <a href="/Home/SubMenu">here!</a></p>
+    <h5>Tasty</h5>
+    <p>Submenu <a href="/Home/SubMenu">here!</a></p>
+    <h6>NomNom</h6>
+    <p>Submenu <a href="/Home/SubMenu">here!</a></p>
+    <h7>Delicacies</h7>
+    <p>Submenu <a href="/Home/SubMenu">here!</a></p>*@
+
+</div>
+<div class="table">
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                @{
+                    foreach(var head in TableHeaders)
+                    {
+                    <th>
+                        
+                        @head
+                    </th>
+                        
+                    }
+                }
+            </tr>
+        </thead>
+        @{
+            if(Model != null)
+            {
+                foreach (var Data in Model)
+                {
+
+                    <tr>
+                        
+                        <td>
+                        <b>@Data.Name</b>
+                        </td>
+                        
+                        <td>
+                        @Data.Description
+                        </td>
+                        
+                        <td>
+                        @Data.Price
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                        @Data.NumberOfCalories
+                        </td>
+                        
+                        <td>
+                        @Data.IsVegan
+                        </td>
+                        
+                        <td>
+                        @Data.IsVegeterian
+                        </td>
+                    </tr>
+                }
+            }
+        }
+    </table>
+    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="SubMenu">Check out allergy and ingredient information here!</a>
+
+</div>
