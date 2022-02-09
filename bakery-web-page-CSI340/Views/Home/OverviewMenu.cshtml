@@ -33,9 +33,12 @@
                 @{
                     foreach(var head in TableHeaders)
                     {
-                    <th>
+                    <th colspan="4">
                         
                         @head
+                    </th>
+                    <th>
+                    @Html.ActionLink("Create", "Create", new{@class="btn btn-primary"})
                     </th>
                         
                     }
@@ -49,25 +52,29 @@
                 {
 
                     <tr>
-                        
+                        <td>
+                        Item: @Data.MenuItemId
+                        </td>
+
                         <td>
                         <b>@Data.Name</b>
                         </td>
-                        
+
                         <td>
-                        @Data.Description
+                        @Data.NumberOfCalories Calories
                         </td>
-                        
+
                         <td>
                         @Data.Price
                         </td>
 
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new {  id=Data.MenuItemId  }, new{@class="btn btn-primary"})
+                        </td>
+
                     </tr>
                     <tr>
-                        <td>
-                        @Data.NumberOfCalories
-                        </td>
-                        
+  
                         <td>
                         @Data.IsVegan
                         </td>
@@ -75,6 +82,13 @@
                         <td>
                         @Data.IsVegeterian
                         </td>
+
+                        <td colspan="2">
+                        @Data.Description
+                        </td>
+
+                        
+
                     </tr>
                 }
             }

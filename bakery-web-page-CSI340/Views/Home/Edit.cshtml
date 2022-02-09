@@ -1,0 +1,63 @@
+﻿@model bakery_web_page_CSI340.Models.MenuItems
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>MenuItems</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="MenuItemId" class="control-label"></label>
+                <input asp-for="MenuItemId" class="form-control" readonly/>
+                <span asp-validation-for="MenuItemId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NumberOfCalories" class="control-label"></label>
+                <input asp-for="NumberOfCalories" class="form-control" />
+                <span asp-validation-for="NumberOfCalories" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsVegan" class="control-label"></label>
+                <input asp-for="IsVegan" class="form-control" />
+                <span asp-validation-for="IsVegan" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsVegeterian" class="control-label"></label>
+                <input asp-for="IsVegeterian" class="form-control" />
+                <span asp-validation-for="IsVegeterian" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="OverviewMenu">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

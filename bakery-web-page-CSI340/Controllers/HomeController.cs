@@ -66,7 +66,7 @@ namespace bakery_web_page_CSI340.Controllers
             {
                 con.Open();
                 com.Connection = con;
-                com.CommandText = "SELECT [Name],[Description],[Price],[NumberOfCalories],[IsVegan],[IsVegeterian] FROM [bakery-web-page-CSI340-DB].[dbo].[MenuItem]";
+                com.CommandText = "SELECT [MenuItemId],[Name],[Description],[Price],[NumberOfCalories],[IsVegan],[IsVegeterian] FROM [bakery-web-page-CSI340-DB].[dbo].[MenuItem]";
                 //com.CommandText = "SELECT TOP (1000) [Name],[Description] FROM [bakery-web-page-CSI340-DB].[dbo].[MenuItem]";
                 dr = com.ExecuteReader();
 
@@ -84,10 +84,11 @@ namespace bakery_web_page_CSI340.Controllers
                     }
                     Menulist.Add(new MenuItems()
                     {
+                        MenuItemId = dr["MenuItemId"].ToString(),
                         Name = dr["Name"].ToString(),
                         Description = dr["Description"].ToString(),
                         Price = "$"+dr["Price"].ToString(),
-                        NumberOfCalories = dr["NumberOfCalories"].ToString() + " Calories",
+                        NumberOfCalories = dr["NumberOfCalories"].ToString(),
                         IsVegan = veganCheck,
                         IsVegeterian = vegeCheck
 
@@ -161,7 +162,205 @@ namespace bakery_web_page_CSI340.Controllers
                 throw ex;
             }
         }
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("ContactInfo");
+            }
+            
+            MenuItems item = new MenuItems();
+            try
+            {
+                con.Open();
+                com.Connection = con;
+                com.CommandText = "SELECT [MenuItemId],[Name],[Description],[Price],[NumberOfCalories],[IsVegan],[IsVegeterian] FROM [bakery-web-page-CSI340-DB].[dbo].[MenuItem] WHERE [MenuItemId]=" + id;
+                dr = com.ExecuteReader();
 
+                while (dr.Read())
+                {
+                    string veganCheck = "Not Vegan";
+                    if (dr["IsVegan"].ToString().Equals("True"))
+                    {
+                        veganCheck = "Vegan";
+                    }
+                    string vegeCheck = "Not Vegeterian";
+                    if (dr["IsVegeterian"].ToString().Equals("True"))
+                    {
+                        vegeCheck = "Vegeterian";
+                    }
+                    item.MenuItemId = dr["MenuItemId"].ToString();
+                    item.Name = dr["Name"].ToString();
+                    item.Description = dr["Description"].ToString();
+                    item.Price = "$" + dr["Price"].ToString();
+                    item.NumberOfCalories = dr["NumberOfCalories"].ToString();
+                    item.IsVegan = veganCheck;
+                    item.IsVegeterian = vegeCheck;
+                    
+                }
+
+                con.Close();
+                return View(item);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(MenuItems item)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    int veganCheck = 0;
+                    if (item.IsVegan.Equals("Vegan"))
+                    {
+                        veganCheck = 1;
+                    }
+                    int vegeCheck = 0;
+                    if (item.IsVegeterian.Equals("Vegeterian"))
+                    {
+                        vegeCheck = 1;
+                    }
+                    con.Open();
+                    com.Connection = con;
+                    //com.CommandText = "DELETE FROM [bakery-web-page-CSI340-DB].[dbo].[MenuItem] WHERE Id=" + item.MenuItemId;
+                    com.CommandText = "UPDATE [bakery-web-page-CSI340-DB].[dbo].[MenuItem] SET [Name] = @name, [Description] = @desc, [Price] = @price, [NumberOfCalories] = @numCal, [IsVegan] = @vegan, [IsVegeterian] = @vege WHERE [MenuItemId] = @id";
+                    com.Parameters.AddWithValue("@name", item.Name);
+                    com.Parameters.AddWithValue("@desc", item.Description);
+                    com.Parameters.AddWithValue("@price", item.Price);
+                    com.Parameters.AddWithValue("@numCal", item.NumberOfCalories);
+                    com.Parameters.AddWithValue("@vegan", veganCheck);
+                    com.Parameters.AddWithValue("@vege", vegeCheck);
+                    com.Parameters.AddWithValue("@id", item.MenuItemId);
+                    com.ExecuteNonQuery();
+                    Console.WriteLine("============================================================================");
+                    con.Close();
+                    return View(item);
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+            }
+            return View(item);
+
+        }
+
+        public IActionResult Create()
+        {
+            MenuItems menuItems = new MenuItems();
+            return View(menuItems);
+        }
+
+        [HttpPost]
+        public IActionResult Create(MenuItems item)
+        {
+            if (ModelState.IsValid)
+            {
+                /*
+                con.Open();
+                SqlCommand sqlCmd = new SqlCommand("CreateMenuItem", con);
+                sqlCmd.CommandType = System.Data.CommandType.StoredProcedure;
+                sqlCmd.Parameters.AddWithValue("MenuItemId", menuItems.MenuItemId);
+                sqlCmd.Parameters.AddWithValue("Name", menuItems.Name);
+                sqlCmd.Parameters.AddWithValue("Description", menuItems.Description);
+                sqlCmd.Parameters.AddWithValue("Price", menuItems.Price);
+                sqlCmd.Parameters.AddWithValue("NumberOfCalories", menuItems.NumberOfCalories);
+                sqlCmd.Parameters.AddWithValue("IsVegan", menuItems.IsVegan);
+                sqlCmd.Parameters.AddWithValue("IsVegeterian", menuItems.IsVegeterian);
+                sqlCmd.ExecuteNonQuery();
+                con.Close();*/
+
+                try
+                {
+                    int veganCheck = 0;
+                    if (item.IsVegan.Equals("Vegan"))
+                    {
+                        veganCheck = 1;
+                    }
+                    int vegeCheck = 0;
+                    if (item.IsVegeterian.Equals("Vegeterian"))
+                    {
+                        vegeCheck = 1;
+                    }
+
+                    con.Open();
+                    com.Connection = con;
+                    //com.CommandText = "UPDATE [Id],[Name],[Description],[Price],[NumberOfCalories],[IsVegan],[IsVegeterian] FROM [bakery-web-page-CSI340-DB].[dbo].[MenuItem] WHERE Id=" + item.MenuItemId;
+                    com.CommandText = "INSERT INTO [bakery-web-page-CSI340-DB].[dbo].[MenuItem] ([MenuItemId], [Name], [Description], [Price], [NumberOfCalories], [IsVegan], [IsVegeterian]) VALUES (@id, @name, @desc, @price, @numCal, @vegan, @vege)";
+                    com.Parameters.AddWithValue("@name", item.Name);
+                    com.Parameters.AddWithValue("@desc", item.Description);
+                    com.Parameters.AddWithValue("@price", item.Price);
+                    com.Parameters.AddWithValue("@numCal", item.NumberOfCalories);
+                    com.Parameters.AddWithValue("@vegan", veganCheck);
+                    com.Parameters.AddWithValue("@vege", vegeCheck);
+                    com.Parameters.AddWithValue("@id", item.MenuItemId);
+
+                    com.ExecuteNonQuery();
+
+                    con.Close();
+
+                    return RedirectToAction("OverviewMenu");
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+
+               
+
+            }
+            return View(item);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(MenuItems item)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    //int veganCheck = 0;
+                    //if (item.IsVegan.Equals("Vegan"))
+                    //{
+                    //    veganCheck = 1;
+                    //}
+                    //int vegeCheck = 0;
+                    //if (item.IsVegeterian.Equals("Vegeterian"))
+                    //{
+                    //    vegeCheck = 1;
+                    //}
+                    con.Open();
+                    com.Connection = con;
+
+                    com.CommandText = "DELETE FROM [bakery-web-page-CSI340-DB].[dbo].[MenuItem] WHERE [MenuItemId] = @id";
+
+                    com.Parameters.AddWithValue("@id", item.MenuItemId);
+
+                    Console.WriteLine(com.CommandText);
+                    Console.WriteLine("//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////");
+                    com.ExecuteNonQuery();
+
+                    con.Close();
+                    return View(item);
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+            }
+            return View(item);
+
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
